@@ -1,0 +1,25 @@
+{
+  "name": "gulp-cflint",
+  "version": "0.0.2",
+  "description": "A Gulp plugin for identifying and reporting on patterns found in CFML code.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/morgdenn/gulp-cflint.git"
+  },
+  "author": "Morgan Dennithorne <m@d9e.me>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/morgdenn/gulp-cflint/issues"
+  },
+  "homepage": "https://github.com/morgdenn/gulp-cflint#readme",
+  "devDependencies": {
+    "cflint": "^0.0.5",
+    "gulp-util": "^3.0.8",
+    "lodash": "^4.17.4",
+    "through2": "^2.0.3"
+  }
+}
