@@ -31,7 +31,13 @@ module.exports = function (options) {
 
 			gutil.log(stdout);
 
-			var errorData = JSON.parse(stdout);
+			var errorData = [];
+
+			try {
+				errorData = JSON.parse(stdout);
+			} catch (e) {
+				// Not valid JSON.
+			}
 
 			if (errorData.length > 0) {
 
