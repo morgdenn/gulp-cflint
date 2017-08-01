@@ -23,7 +23,13 @@ module.exports = function (options) {
 			gutil.log('cflint: ' + file.path);
 		}
 
+		gutil.log(cflintPath);
+
 		exec(cflintPath + ' -stdout -json -q -file ' + file.path, function (err, stdout, stderr) {
+
+			gutil.log('cflint: ' + file.path);
+
+			gutil.log(stdout);
 
 			var errorData = JSON.parse(stdout);
 
