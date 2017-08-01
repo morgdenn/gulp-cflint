@@ -18,12 +18,13 @@ module.exports = function (options) {
 		var that = this;
 
 		var cflintPath = path.normalize('./node_modules/.bin/cflint');
+		gutil.log(cflintPath);
+		cflintPath = path.resolve(cflintPath);
+		gutil.log(cflintPath);
 
 		if (!options.quiet) {
 			gutil.log('cflint: ' + file.path);
 		}
-
-		gutil.log(cflintPath);
 
 		exec(cflintPath + ' -stdout -json -q -file ' + file.path, function (err, stdout, stderr) {
 
