@@ -45,16 +45,16 @@ module.exports = function (options) {
 
 					element.locations.forEach(function (location) {
 
-						errorMessage = element.severity + ' ' + location.message;
+						errorMessage = 'CFLint error in: ' + location.file
 
 						gutil.log(gutil.colors.magenta(location.file + ':' + location.line));
-						gutil.log(gutil.colors.red(errorMessage));
+						gutil.log(gutil.colors.red(element.severity + ' ' + location.message));
 					});
 
 				});
 
 				if (options.failOnError) {
-					var error = new gutil.PluginError('gulp-cflint', 'CFLint error in: ' + location.file);
+					var error = new gutil.PluginError('gulp-cflint', errorMessage);
 				}
 			}
 
