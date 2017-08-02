@@ -17,24 +17,24 @@ module.exports = function (options) {
 
 		var that = this;
 
-		var cflintPath = path.normalize('./node_modules/.bin/cflint');
+		var cflintPath;
+
+		if (process.platform === 'win32') {
+			cflintPath = 'node_modules\\.bin\\cflint';
+		} else {
+			cflintPath = './node_modules/.bin/cflint';
+		}
+
+		/* var cflintPath = path.normalize('./node_modules/.bin/cflint');
 		gutil.log(cflintPath);
 		cflintPath = path.resolve(cflintPath);
-		gutil.log(cflintPath);
+		gutil.log(cflintPath); */
 
 		if (!options.quiet) {
 			gutil.log('cflint: ' + file.path);
 		}
 
 		exec(cflintPath + ' -stdout -json -q -file ' + file.path, function (err, stdout, stderr) {
-
-			gutil.log('cflint: ' + file.path);
-
-			gutil.log(stdout);
-
-			gutil.log(err);
-
-			gutil.log(stderr);
 
 			var errorData = [];
 
@@ -56,7 +56,7 @@ module.exports = function (options) {
 
 						errorMessage = element.severity + ' ' + location.message;
 
-						gutil.log(gutil.colors.red(location.file + ':' + location.line));
+						gutil.log(gutil.colors.magenta(location.file + ':' + location.line));
 						gutil.log(gutil.colors.red(errorMessage));
 					});
 
