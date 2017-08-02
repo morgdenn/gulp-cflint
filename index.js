@@ -17,18 +17,11 @@ module.exports = function (options) {
 
 		var that = this;
 
-		var cflintPath;
+		var cflintPath = './node_modules/.bin/cflint';
 
 		if (process.platform === 'win32') {
-			cflintPath = 'node_modules\\.bin\\cflint';
-		} else {
-			cflintPath = './node_modules/.bin/cflint';
+			cflintPath = path.normalize(cflintPath);
 		}
-
-		/* var cflintPath = path.normalize('./node_modules/.bin/cflint');
-		gutil.log(cflintPath);
-		cflintPath = path.resolve(cflintPath);
-		gutil.log(cflintPath); */
 
 		if (!options.quiet) {
 			gutil.log('cflint: ' + file.path);
@@ -43,8 +36,6 @@ module.exports = function (options) {
 			} catch (e) {
 				// Not valid JSON.
 			}
-
-			gutil.log(errorData);
 
 			if (errorData.length > 0) {
 
@@ -63,7 +54,7 @@ module.exports = function (options) {
 				});
 
 				if (options.failOnError) {
-					var error = new gutil.PluginError('gulp-cflint', errorMessage);
+					var error = new gutil.PluginError('gulp-cflint', 'CFLint error in: ' + location.file);
 				}
 			}
 
