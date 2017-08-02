@@ -17,10 +17,10 @@ module.exports = function (options) {
 
 		var that = this;
 
-		var cflintPath = './node_modules/.bin/cflint';
+		var cflintPath = './node_modules/gulp-cflint/node_modules/.bin/cflint';
 
 		if (process.platform === 'win32') {
-			cflintPath = path.normalize(cflintPath);
+			cflintPath = path.normalize('./node_modules/.bin/cflint');
 		}
 
 		if (!options.quiet) {
@@ -28,6 +28,11 @@ module.exports = function (options) {
 		}
 
 		exec(cflintPath + ' -stdout -json -q -file ' + file.path, function (err, stdout, stderr) {
+
+			if (err) {
+				var error = new gutil.PluginError('gulp-cflint', err);
+				callback(error);
+			}
 
 			var errorData = [];
 
