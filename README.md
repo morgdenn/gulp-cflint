@@ -15,13 +15,31 @@ const {src, task} = require('gulp');
 const cflint = require('gulp-cflint');
 
 const cfFiles = [
-	'./**/*.cf[cm]',
-	'!./WEB-INF/**/*',
+  './**/*.cf[cm]',
+  '!./WEB-INF/**/*',
   '!./CFIDE/**/*'
 ];
 
-task('default', () => {
-    return src(cfFiles)
-        .pipe(cflint({ failOnError: false, quiet: false }));
+task('lint:cf', () => {
+  return src(cfFiles)
+    .pipe(cflint({ failOnError: false, quiet: false }));
+});
+
+task('test:cf', () => {
+  return src(cfFiles)
+    .pipe(cflint({ failOnError: true, quiet: true }));
 });
 ```
+## Options
+
+#### options.failOnError
+
+Type: `Boolean`
+
+When `true`, Stop a task/stream if an CFLint error has been reported for any file.
+
+#### options.quiet
+
+Type: `Boolean`
+
+When `false`, this option will show each file name as its proccessed.
