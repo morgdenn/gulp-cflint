@@ -1,21 +1,23 @@
-var exec = require('child_process').exec;
-var gutil = require('gulp-util');
-var path = require('path');
-var through = require('through2');
-var _ = require('lodash');
+const exec = require('child_process').exec;
+const gutil = require('gulp-util');
+const path = require('path');
+const through = require('through2');
+const _ = require('lodash');
 
-module.exports = function (options) {
+module.exports = (options) => {
 
-	var defaultOptions = {
-		failOnError: false,
-		quiet: false
+	const defaultOptions = {
+		failOnError: true,
+		quiet: true,
+		folder: '',
+		logerror: true,
+		maxBuffer: 10000000
 	};
 
+	// Set the default options
 	_.defaults(options, defaultOptions)
 
 	return through.obj(function (file, encoding, callback) {
-
-		var that = this;
 
 		var cflintPath = './node_modules/gulp-cflint/node_modules/.bin/cflint';
 
@@ -23,11 +25,27 @@ module.exports = function (options) {
 			cflintPath = path.normalize('./node_modules/.bin/cflint');
 		}
 
-		if (!options.quiet) {
-			gutil.log('cflint: ' + file.path);
+		var command = cflintPath + ' -stdout -json -quiet';
+
+		if (options.logerror) {
+			command += ' -logerror';
 		}
 
-		exec(cflintPath + ' -stdout -json -q -file ' + file.path, function (err, stdout, stderr) {
+		if (options.folder.length) {
+			var pathToUse = options.folder;
+			command += ' -folder ';
+		}else{
+			var pathToUse = file.path;
+			command += ' -file ';
+		}
+
+		command += pathToUse;
+
+		if (!options.quiet) {
+			gutil.log('cflint: ' + pathToUse);
+		}
+
+		exec(command, { maxBuffer: options.maxBuffer }, (err, stdout, stderr) => {
 
 			if (err) {
 				var error = new gutil.PluginError('gulp-cflint', err);
@@ -37,34 +55,35 @@ module.exports = function (options) {
 			var errorData = [];
 
 			try {
-				errorData = JSON.parse(stdout);
+				errorData = JSON.parse(stdout).issues;
 			} catch (e) {
 				// Not valid JSON.
 			}
 
 			if (errorData.length > 0) {
 
-				var errorMessage = '';
+				errorData.forEach( (element) => {
 
-				errorData.forEach(function (element) {
-
-					element.locations.forEach(function (location) {
+					element.locations.forEach( (location) => {
 
 						errorMessage = 'CFLint error in: ' + location.file
 
-						gutil.log(gutil.colors.magenta(location.file + ':' + location.line));
-						gutil.log(gutil.colors.red(element.severity + ' ' + location.message));
+						gutil.log(gutil.colors.magenta(location.file + ' ' + location.line + ':' + location.column));
+						gutil.log(gutil.colors.red(element.message));
+						gutil.log(gutil.colors.red(location.message));
+
+
 					});
 
 				});
 
 				if (options.failOnError) {
-					var error = new gutil.PluginError('gulp-cflint', errorMessage);
+					var error = new gutil.PluginError('gulp-cflint', 'CFLint error in: ' + pathToUse);
 				}
 			}
 
 			// take appropriate action then
-			that.push(file);
+			this.push(file);
 			callback(error);
 		});
 
