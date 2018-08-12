@@ -60,7 +60,7 @@ task('test:cf', () => {
     .pipe(cflint({ failOnError: true, quiet: true, folder: './system/customtags' }));
 });
 ```
-### logerror
+### logError
 
 Type: `Boolean`
 

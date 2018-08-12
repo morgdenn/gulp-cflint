@@ -10,7 +10,7 @@ module.exports = (options) => {
 		failOnError: true,
 		quiet: true,
 		folder: '',
-		logerror: true,
+		logError: true,
 		maxBuffer: 10000000
 	};
 
@@ -27,7 +27,7 @@ module.exports = (options) => {
 
 		var command = cflintPath + ' -stdout -json -quiet';
 
-		if (options.logerror) {
+		if (options.logError) {
 			command += ' -logerror';
 		}
 
