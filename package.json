@@ -1,6 +1,6 @@
 {
   "name": "gulp-cflint",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A Gulp plugin for identifying and reporting on patterns found in CFML code.",
   "main": "index.js",
   "scripts": {
